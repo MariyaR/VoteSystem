@@ -53,8 +53,7 @@ public class ValidationUtil {
     }
 
     public static void assureRestoIdConsistent(DayMenuTo dayMenuTo, int restoId) {
-//      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
-        if (dayMenuTo.restoIsPresent() & dayMenuTo.getResto().getId()!= restoId); {
+        if (dayMenuTo.restoIsPresent() && dayMenuTo.getResto().getId()!= restoId ) {
             throw new IllegalRequestDataException(dayMenuTo + " must be with resto_id=" + restoId);
         }
     }

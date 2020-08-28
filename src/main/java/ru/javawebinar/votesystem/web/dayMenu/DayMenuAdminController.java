@@ -15,8 +15,6 @@ import ru.javawebinar.votesystem.web.AbstractController;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-
-import static ru.javawebinar.votesystem.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.votesystem.util.ValidationUtil.assureRestoIdConsistent;
 
 @RestController
