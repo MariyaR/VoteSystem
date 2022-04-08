@@ -7,7 +7,7 @@
 
     <import resource="spring-cache.xml"/>
    <import resource="spring-db.xml"/>
-    <import resource="spring-security.xml"/>
+   <import resource="spring-security.xml"/>
 
 
     <!-- Not necessary, already included with component-scan -->
