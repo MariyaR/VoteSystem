@@ -105,21 +105,19 @@ public class DayMenuAdminControllerTest extends AbstractControllerTest {
     @Test
     void createWithLocation() throws Exception {
         DayMenu newMenu = DayMenuTestData.getNew();
-        ResultActions action = perform(doPost(RESTO_ID+1).jsonBody(Util.createNewTo(newMenu)).basicAuth(ADMIN))
+        ResultActions action = perform(doPost().jsonBodyParam(Util.createNewTo(newMenu), "restoId", RESTO_ID+1).basicAuth(ADMIN))
                 .andExpect(status().isCreated());
 
         DayMenu created = TestUtil.readFromJson(action, DayMenu.class);
-        //DayMenu created = repository.get(from_action.getId(), from_action.getId());
         Integer newId = created.getId();
         newMenu.setId(newId);
         newMenu.setResto(RESTO_2);
-       // DayMenu_MATCHERS.assertMatch(created, newMenu);
         DayMenu_MATCHERS.assertMatch(repository.get(newId, newId), newMenu);
     }
 
     @Test
     void getAll() throws Exception {
-        perform(doGet("resto/{restoId}", RESTO_ID).basicAuth(ADMIN))
+        perform(doGet("?restoId={restoId}", RESTO_ID).basicAuth(ADMIN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DayMenu_MATCHERS.contentJson(DAY_MENU_3, DAY_MENU_2, DAY_MENU_1));

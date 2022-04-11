@@ -12,7 +12,7 @@ import static ru.javawebinar.votesystem.web.SecurityUtil.authUserId;
 @RestController
 @RequestMapping(value = DayMenuUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DayMenuUserController {
-    static final String REST_URL = "/user/daymenu";
+    static final String REST_URL = "/profile/today-menus";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -25,7 +25,7 @@ public class DayMenuUserController {
         return dayMenuRepository.getTodayMenus();
     }
 
-    @GetMapping("/{menuId}")
+    @GetMapping("/{menuId}/vote")
     public String voteForMenu(@PathVariable int menuId) {
         log.info("user{} votes for menu {}", authUserId(), menuId);
         return dayMenuRepository.voteForMenu(menuId, authUserId());

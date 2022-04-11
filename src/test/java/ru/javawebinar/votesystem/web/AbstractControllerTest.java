@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -59,7 +58,6 @@ abstract public class AbstractControllerTest {
                 .build();
     }
 
-
     //perform
     public ResultActions perform(RequestWrapper wrapper) throws Exception {
         return perform(wrapper.builder);
@@ -68,7 +66,6 @@ abstract public class AbstractControllerTest {
     public ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
     }
-
 
     //doGet
     protected RequestWrapper doGet(String urlTemplatePad, Object... uriVars) {
@@ -109,12 +106,12 @@ abstract public class AbstractControllerTest {
 
 
     //doPost
-    protected RequestWrapper doPost(String pad) throws Exception {
-        return wrap(MockMvcRequestBuilders.post(url + pad));
+    protected RequestWrapper doPost(String id) throws Exception {
+        return wrap(MockMvcRequestBuilders.post(url + id));
     }
 
-    protected RequestWrapper doPost(int id) {
-        return wrap(MockMvcRequestBuilders.post(url + "{restoId}", id));
+    protected RequestWrapper doPost(int restoId) {
+        return wrap(MockMvcRequestBuilders.post(url));
     }
 
     protected RequestWrapper doPost() {
@@ -126,7 +123,6 @@ abstract public class AbstractControllerTest {
     protected RequestWrapper doPatch(int id) {
         return wrap(MockMvcRequestBuilders.patch(url + "{id}", id));
     }
-
 
     //requestWrapper
     public static class RequestWrapper {
@@ -146,6 +142,11 @@ abstract public class AbstractControllerTest {
 
         public <T> RequestWrapper jsonBody(T body) {
             builder.contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(body));
+            return this;
+        }
+
+        public <T> RequestWrapper jsonBodyParam(T body, String paramName, int paramValue) {
+            builder.contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(body)).param(paramName, String.valueOf(paramValue));
             return this;
         }
 

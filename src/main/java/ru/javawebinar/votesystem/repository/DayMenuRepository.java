@@ -74,7 +74,7 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
                return "Sorry, it is too late to change your mind";
            } else {
                DayMenu unvotedMenu = crudDayMenuRepository.getMenuByRestoId(todayUserVote.getResto().getId());
-               Assert.notNull(unvotedMenu, "unvotedMenu must not be null");
+               Assert.notNull(unvotedMenu, "unvoted Menu must not be null");
                unvotedMenu.unvote();
                crudDayMenuRepository.save(unvotedMenu);
                recordRepository.delete(todayUserVote.getId(), userId);
@@ -87,6 +87,6 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
         recordRepository.save(new Record(LocalDate.now(),
                 em.getReference(Resto.class, votedMenu.getResto().getId()),
                 em.getReference(User.class, userId)), userId);
-        return "Thank you! You voted for the menu " + votedMenu.getId();
+        return "Thank you! You have voted for the menu " + votedMenu.getId();
     }
 }

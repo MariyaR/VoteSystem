@@ -20,7 +20,7 @@ import static ru.javawebinar.votesystem.util.ValidationUtil.assureRestoIdConsist
 @RestController
 @RequestMapping(value = DayMenuAdminController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DayMenuAdminController extends AbstractController<DayMenu> {
-    static final String REST_URL = "/admin/daymenu";
+    static final String REST_URL = "/admin/today-menus";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -32,8 +32,8 @@ public class DayMenuAdminController extends AbstractController<DayMenu> {
         this.repository = dayMenuRepository;
     }
 
-    @GetMapping("/resto/{restoId}")
-    public List<DayMenuTo> getAll(@PathVariable int restoId) {
+    @GetMapping
+    public List<DayMenuTo> getAll(@RequestParam int restoId) {
         return Util.getDayMenuTos(dayMenuRepository.getAllEntries(restoId));
     }
 
@@ -42,18 +42,16 @@ public class DayMenuAdminController extends AbstractController<DayMenu> {
       return Util.createTo(super.getById(id, id));
     }
 
-    @PostMapping(value = "/{restoId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DayMenu> createWithLocation(@RequestBody DayMenuTo dayMenuTo, @PathVariable int restoId) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DayMenu> createWithLocation(@RequestBody DayMenuTo dayMenuTo, @RequestParam int restoId) {
        return super.createWithUrl(Util.createNewFromToDayMenu(dayMenuTo), REST_URL, restoId);
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         super.deleteById(id);
     }
-
 
     @PutMapping(value = "/{restoId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)

@@ -65,7 +65,7 @@ public class RestoAdminController extends AbstractController<Resto> {
 
     }
 
-    @GetMapping("/history/{id}")
+    @GetMapping("/{id}/history")
     public Resto getWithHistory(@PathVariable int id) {
         log.info("getwithHistory {}", id);
         return restoRepository.getWithHistory(id);

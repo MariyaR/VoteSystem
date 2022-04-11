@@ -52,21 +52,20 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
 
     @Test
     void voteForMenu() throws Exception {
-        perform(doGet("{menuId}", todayMenu1.getId()).basicAuth(USER))
+        perform(doGet("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-               // .andDo(print())
-                .andExpect(content().string("Thank you! You voted for the menu " + todayMenu1.getId()));
+                .andExpect(content().string("Thank you! You have voted for the menu " + todayMenu1.getId()));
         DayMenu menu = repository.get(todayMenu1.getId(), USER_ID);
         assertThat(menu.getCounter()).isEqualTo(1);
     }
 
     @Test
     void reVoteForMenu() throws Exception {
-        perform(doGet("{menuId}", todayMenu1.getId()).basicAuth(USER))
+        perform(doGet("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
                 .andExpect(status().isOk());
 
-        final ResultActions result = perform(doGet("{menuId}", todayMenu2.getId()).basicAuth(USER))
+        final ResultActions result = perform(doGet("{menuId}/vote", todayMenu2.getId()).basicAuth(USER))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -74,7 +73,7 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
         DayMenu menu2 = repository.get(todayMenu2.getId(), USER_ID);
 
         if (LocalTime.now().isBefore(LocalTime.of(11, 0))){
-            result.andExpect(content().string("Thank you! You voted for the menu " + todayMenu2.getId()));
+            result.andExpect(content().string("Thank you! You have voted for the menu " + todayMenu2.getId()));
             assertThat(menu1.getCounter()).isEqualTo(0);
             assertThat(menu2.getCounter()).isEqualTo(1);
         } else {

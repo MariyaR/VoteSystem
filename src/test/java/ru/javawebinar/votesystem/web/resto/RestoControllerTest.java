@@ -40,7 +40,7 @@ public class RestoControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithHystory() throws Exception {
-        perform(doGet( "history/{id}", RESTO_ID).basicAuth(ADMIN))
+        perform(doGet( "{id}/history", RESTO_ID).basicAuth(ADMIN))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472

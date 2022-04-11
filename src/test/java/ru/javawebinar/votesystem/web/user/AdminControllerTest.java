@@ -6,7 +6,6 @@ import ru.javawebinar.votesystem.TestUtil;
 import ru.javawebinar.votesystem.UserTestData;
 import ru.javawebinar.votesystem.model.User;
 import ru.javawebinar.votesystem.repository.UserRepository;
-import ru.javawebinar.votesystem.util.UserUtil;
 import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractControllerTest;
 
