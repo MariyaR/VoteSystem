@@ -22,5 +22,5 @@
         <heap>1</heap>
     </cache-template>
 
-    <cache alias="restos" uses-template="singleNonExpiryCache"/>
+    <cache alias="todayMenus" uses-template="singleNonExpiryCache"/>
 </config>

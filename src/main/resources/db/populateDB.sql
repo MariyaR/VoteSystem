@@ -26,15 +26,15 @@ INSERT INTO restos (name, address) VALUES
     ('resto3', 'address3');
 
 INSERT INTO restos_history (date, resto_id, resto_menu, counter) VALUES
-    ('2000-01-01', 100004, '{"10000":"burger","500":"cake"}', 0),
-    ('2000-01-02', 100004, '{"10000":"burger","500":"cake"}', 0),
-    ('2000-01-03', 100004, '{"10000":"burger","500":"cake"}', 0),
-    ('2000-01-01', 100005, '{"12000":"pasta","500":"ice-cream"}', 0),
-    ('2000-01-02', 100005, '{"12000":"pasta","500":"ice-cream"}', 0),
-    ('2000-01-03', 100005, '{"12000":"pasta","500":"ice-cream"}', 0),
-    ('2000-01-01', 100006, '{"13000":"sushi","500":"cheese-cake"}', 0),
-    ('2000-01-02', 100006, '{"13000":"sushi","500":"cheese-cake"}', 0),
-    ('2000-01-03', 100006, '{"13000":"sushi","500":"cheese-cake"}', 0);
+    (CURRENT_DATE,                      100004, '{"10000":"burger","500":"cake"}', 0),
+    (CURRENT_DATE - INTERVAL '1' MONTH, 100004, '{"10000":"burger","500":"cake"}', 0),
+    (CURRENT_DATE - INTERVAL '2' MONTH, 100004, '{"10000":"burger","500":"cake"}', 0),
+    (CURRENT_DATE,                      100005, '{"12000":"pasta","500":"ice-cream"}', 0),
+    (CURRENT_DATE - INTERVAL '1' MONTH, 100005, '{"12000":"pasta","500":"ice-cream"}', 0),
+    (CURRENT_DATE - INTERVAL '2' MONTH, 100005, '{"12000":"pasta","500":"ice-cream"}', 0),
+    (CURRENT_DATE,                      100006, '{"13000":"sushi","500":"cheese-cake"}', 0),
+    (CURRENT_DATE - INTERVAL '1' MONTH, 100006, '{"13000":"sushi","500":"cheese-cake"}', 0),
+    (CURRENT_DATE - INTERVAL '2' MONTH, 100006, '{"13000":"sushi","500":"cheese-cake"}', 0);
 
 INSERT INTO voting_history (date, user_id, resto_id) VALUES
     ('2000-01-01', 100000, 100004),

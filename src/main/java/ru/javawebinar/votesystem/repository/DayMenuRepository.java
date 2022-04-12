@@ -1,6 +1,8 @@
 package ru.javawebinar.votesystem.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -30,7 +32,7 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
     @PersistenceContext
     private EntityManager em;
 
-
+    @CacheEvict(value = "todayMenus", allEntries = true)
     @Transactional
     public DayMenu save(DayMenu menu, int restoId) {
         Assert.notNull(menu, "menu must not be null");
@@ -41,6 +43,7 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
         return crudDayMenuRepository.save(menu);
     }
 
+    @CacheEvict(value = "todayMenus", allEntries = true)
     public void delete(int id, int userId) {
         checkNotFoundWithId(crudDayMenuRepository.delete(id)!=0, id);
     }
@@ -61,6 +64,7 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
         return checkNotFound(crudDayMenuRepository.getByDate(date), "date= " + date);
     }
 
+    @Cacheable("todayMenus")
     public List<DayMenu> getTodayMenus() {
         return crudDayMenuRepository.getByDate(LocalDate.now());
     }
