@@ -17,21 +17,21 @@ public class DayMenuTo extends BaseTo {
     private Resto resto;
 
     @NotNull
-    private Map<Long, String> menu;
+    private Map<String, Long> menu;
 
     private int counter = 0;
 
     public DayMenuTo() {
     }
 
-    public DayMenuTo(@NotNull LocalDate date, @NotNull Resto resto, @NotNull Map<Long, String> menu, int counter) {
+    public DayMenuTo(@NotNull LocalDate date, @NotNull Resto resto, @NotNull Map<String, Long> menu, int counter) {
         this.date = date;
         this.resto = resto;
         this.menu = menu;
         this.counter = counter;
     }
 
-    public DayMenuTo(Integer id, @NotNull LocalDate date, @NotNull Resto resto, @NotNull Map<Long, String> menu, int counter) {
+    public DayMenuTo(Integer id, @NotNull LocalDate date, @NotNull Resto resto, @NotNull Map<String, Long> menu, int counter) {
         super(id);
         this.date = date;
         this.resto = resto;
@@ -55,11 +55,11 @@ public class DayMenuTo extends BaseTo {
         this.resto = resto;
     }
 
-    public Map<Long, String> getMenu() {
+    public Map<String, Long> getMenu() {
         return menu;
     }
 
-    public void setMenu(Map<Long, String> menu) {
+    public void setMenu(Map<String, Long> menu) {
         this.menu = menu;
     }
 

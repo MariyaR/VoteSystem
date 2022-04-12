@@ -83,5 +83,4 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
         }
     }
 
-
 }

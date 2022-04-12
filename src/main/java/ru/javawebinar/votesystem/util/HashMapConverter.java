@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HashMapConverter implements AttributeConverter<Map<Long, String>, String> {
+public class HashMapConverter implements AttributeConverter<Map<String, Long>, String> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(Map<Long, String> menu) {
+    public String convertToDatabaseColumn(Map<String, Long> menu) {
 
         String JsonMenu = null;
         try {
@@ -28,11 +28,11 @@ public class HashMapConverter implements AttributeConverter<Map<Long, String>, S
     }
 
     @Override
-    public Map<Long, String> convertToEntityAttribute(String JsonMenu) {
+    public Map<String, Long> convertToEntityAttribute(String JsonMenu) {
 
-        Map<Long, String> menu = null;
-        TypeReference<HashMap<Long, String>> typeRef
-                = new TypeReference<HashMap<Long, String>>() {};
+        Map<String, Long> menu = null;
+        TypeReference<HashMap<String, Long>> typeRef
+                = new TypeReference<HashMap<String, Long>>() {};
         try {
             menu = objectMapper.readValue(JsonMenu, typeRef);
         } catch (final IOException e) {

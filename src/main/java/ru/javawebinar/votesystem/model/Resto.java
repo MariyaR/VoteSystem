@@ -1,6 +1,7 @@
 package ru.javawebinar.votesystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public class Resto extends AbstractNamedEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resto", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
     @JsonIgnore
+    //@JsonManagedReference //todo resto is not extracted with hystory
     private List<DayMenu> history;
 
     public Resto() {

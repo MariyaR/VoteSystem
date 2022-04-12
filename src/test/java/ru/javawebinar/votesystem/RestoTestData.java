@@ -20,11 +20,11 @@ public class RestoTestData {
     public static final Resto RESTO_1 = new Resto(RESTO_ID, "resto1", "address1");
     public static final Resto RESTO_2 = new Resto(RESTO_ID + 1, "resto2", "address2");
     public static final Resto RESTO_3 = new Resto(RESTO_ID + 2, "resto3", "address3");
-    public static final Map<Long, String> MENU_1 = new HashMap();
+    public static final Map<String, Long> MENU_1 = new HashMap();
 
     static {
-        MENU_1.put(10000L, "burger");
-        MENU_1.put(500L, "cake");
+        MENU_1.put("burger", 10000L);
+        MENU_1.put("cake", 500L);
         final DayMenu dayMenu_1 = new DayMenu(100007, LocalDate.of(2000, 01, 01), MENU_1);
         final DayMenu dayMenu_2 = new DayMenu(100008, LocalDate.of(2000, 01, 02), MENU_1);
         final DayMenu dayMenu_3 = new DayMenu(100009, LocalDate.of(2000, 01, 03), MENU_1);

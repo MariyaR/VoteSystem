@@ -20,27 +20,22 @@ public class RestoRepository implements ru.javawebinar.votesystem.repository.Rep
     @Autowired
     private CrudRestoRepository crudRepository;
 
-    @CacheEvict(value = "restos", allEntries = true)
     public Resto save(Resto resto, int userId) {
         Assert.notNull(resto, "Resto must not be null");
         return crudRepository.save(resto);
     }
 
-    @CacheEvict(value = "restos", allEntries = true)
     public void delete(int id, int userId) {
         checkNotFoundWithId(crudRepository.delete(id) != 0, id);
     }
-
 
     public Resto get(int id, int userId) {
         return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
     }
 
-    @Cacheable("restos")
     public List<Resto> getAllEntries(int userId) {
         return crudRepository.findAll(SORT_NAME_ADDRESS);
     }
-
 
     public Resto getWithHistory(int id) {
         return checkNotFoundWithId(crudRepository.getWitHistory(id), id);

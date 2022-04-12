@@ -19,35 +19,35 @@ public class DayMenuTestData {
 
     public static final int MENU_ID = AbstractBaseEntity.START_SEQ +7;
 
-    public static final Map<Long, String> MENU_1 = new HashMap();
-    public static final Map<Long, String> MENU_2 = new HashMap();
-    public static final Map<Long, String> MENU_3 = new HashMap();
-    public static final Map<Long, String> MENU_NEW = new HashMap<>();
-    public static final Map<Long, String> MENU_UPDATED = new HashMap<>();
+    public static final Map<String, Long> MENU_1 = new HashMap();
+    public static final Map<String, Long> MENU_2 = new HashMap();
+    public static final Map<String, Long> MENU_3 = new HashMap();
+    public static final Map<String, Long> MENU_NEW = new HashMap<>();
+    public static final Map<String, Long> MENU_UPDATED = new HashMap<>();
 
     static {
-        MENU_1.put(10000L, "burger");
-        MENU_1.put(500L, "cake");
-        MENU_2.put(12000L, "pasta");
-        MENU_2.put(500L, "ice-cream");
-        MENU_3.put(13000L, "sushi");
-        MENU_3.put(500L, "cheese-cake");
-        MENU_NEW.put(10000L, "new soup");
-        MENU_NEW.put(500L, "new tiramisu");
-        MENU_UPDATED.put(10000L, "updated:pizza");
-        MENU_UPDATED.put(500L, "updated:cocktail");
+        MENU_1.put( "burger", 10000L);
+        MENU_1.put( "cake", 500L);
+        MENU_2.put("pasta", 12000L);
+        MENU_2.put("ice-cream", 500L);
+        MENU_3.put("sushi", 13000L);
+        MENU_3.put("cheese-cake", 500L);
+        MENU_NEW.put("new soup", 10000L);
+        MENU_NEW.put("new tiramisu", 500L);
+        MENU_UPDATED.put("updated:pizza", 10000L);
+        MENU_UPDATED.put("updated:cocktail", 500L);
     }
 
 
-    public static final DayMenu DAY_MENU_1 = new DayMenu(MENU_ID, LocalDate.of(2000, 01, 01), MENU_1);
-    public static final DayMenu DAY_MENU_2 = new DayMenu(MENU_ID+1, LocalDate.of(2000, 01, 02), MENU_1);
-    public static final DayMenu DAY_MENU_3 = new DayMenu(MENU_ID+2, LocalDate.of(2000, 01, 03), MENU_1);
-    public static final DayMenu DAY_MENU_4 = new DayMenu(MENU_ID+3, LocalDate.of(2000, 01, 01), MENU_2);
-    public static final DayMenu DAY_MENU_5 = new DayMenu(MENU_ID+4, LocalDate.of(2000, 01, 02), MENU_2);
-    public static final DayMenu DAY_MENU_6 = new DayMenu(MENU_ID+5, LocalDate.of(2000, 01, 03), MENU_2);
-    public static final DayMenu DAY_MENU_7 = new DayMenu(MENU_ID+6, LocalDate.of(2000, 01, 01), MENU_3);
-    public static final DayMenu DAY_MENU_8 = new DayMenu(MENU_ID+7, LocalDate.of(2000, 01, 02), MENU_3);
-    public static final DayMenu DAY_MENU_9 = new DayMenu(MENU_ID+8, LocalDate.of(2000, 01, 03), MENU_3);
+    public static final DayMenu DAY_MENU_1 = new DayMenu(MENU_ID, LocalDate.now().minusMonths(1), MENU_1);
+    public static final DayMenu DAY_MENU_2 = new DayMenu(MENU_ID+1, LocalDate.now().minusMonths(2), MENU_1);
+    public static final DayMenu DAY_MENU_3 = new DayMenu(MENU_ID+2, LocalDate.now().minusMonths(3), MENU_1);
+    public static final DayMenu DAY_MENU_4 = new DayMenu(MENU_ID+3, LocalDate.now().minusMonths(1), MENU_2);
+    public static final DayMenu DAY_MENU_5 = new DayMenu(MENU_ID+4, LocalDate.now().minusMonths(2), MENU_2);
+    public static final DayMenu DAY_MENU_6 = new DayMenu(MENU_ID+5, LocalDate.now().minusMonths(3), MENU_2);
+    public static final DayMenu DAY_MENU_7 = new DayMenu(MENU_ID+6, LocalDate.now().minusMonths(1), MENU_3);
+    public static final DayMenu DAY_MENU_8 = new DayMenu(MENU_ID+7, LocalDate.now().minusMonths(2), MENU_3);
+    public static final DayMenu DAY_MENU_9 = new DayMenu(MENU_ID+8, LocalDate.now().minusMonths(3), MENU_3);
     public static final DayMenu DAY_MENU_TODAY_1;// = new DayMenu(MENU_1);
     public static final DayMenu DAY_MENU_TODAY_2; // = new DayMenu(MENU_2);
     public static final DayMenu DAY_MENU_TODAY_3; // = new DayMenu(MENU_3);

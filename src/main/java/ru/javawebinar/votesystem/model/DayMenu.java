@@ -1,5 +1,6 @@
 package ru.javawebinar.votesystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,12 +25,13 @@ public class DayMenu extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "resto_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    //@JsonBackReference
     private Resto resto;
 
 
     @Convert(converter = HashMapConverter.class)
     @Column(name = "resto_menu")
-    private Map<Long, String> menu;
+    private Map<String, Long> menu;
 
     @Column(name = "counter")
     private int counter = 0;
@@ -38,17 +40,17 @@ public class DayMenu extends AbstractBaseEntity {
 
     }
 
-    public DayMenu(Map<Long, String> menu) {
+    public DayMenu(Map< String, Long> menu) {
         this.date = LocalDate.now();
         this.menu = menu;
     }
 
-    public DayMenu(LocalDate date, Map<Long, String> menu) {
+    public DayMenu(LocalDate date, Map< String, Long> menu) {
         this.date = date;
         this.menu = menu;
     }
 
-    public DayMenu(Integer id, LocalDate date, Map<Long, String> menu) {
+    public DayMenu(Integer id, LocalDate date, Map<String, Long> menu) {
         super(id);
         this.date = date;
         this.menu = menu;
@@ -70,11 +72,11 @@ public class DayMenu extends AbstractBaseEntity {
         this.resto = resto;
     }
 
-    public Map<Long, String> getMenu() {
+    public Map<String, Long> getMenu() {
         return menu;
     }
 
-    public void setMenu(Map<Long, String> menu) {
+    public void setMenu(Map<String, Long> menu) {
         this.menu = menu;
     }
 

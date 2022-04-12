@@ -55,7 +55,6 @@ public class DayMenuAdminControllerTest extends AbstractControllerTest {
                 .build();
     }
 
-
     @Test
     void get() throws Exception {
         perform(doGet(MENU_ID).basicAuth(ADMIN))
@@ -120,6 +119,6 @@ public class DayMenuAdminControllerTest extends AbstractControllerTest {
         perform(doGet("?restoId={restoId}", RESTO_ID).basicAuth(ADMIN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DayMenu_MATCHERS.contentJson(DAY_MENU_3, DAY_MENU_2, DAY_MENU_1));
+                .andExpect(DayMenu_MATCHERS.contentJson(DAY_MENU_1, DAY_MENU_2, DAY_MENU_3));
     }
 }
