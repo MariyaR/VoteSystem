@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.javawebinar.votesystem.util.ValidationUtil;
-import ru.javawebinar.votesystem.util.exception.ErrorInfo;
-import ru.javawebinar.votesystem.util.exception.ErrorType;
-import ru.javawebinar.votesystem.util.exception.IllegalRequestDataException;
-import ru.javawebinar.votesystem.util.exception.NotFoundException;
+import ru.javawebinar.votesystem.util.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,6 +36,12 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
+    }
+
+    @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
+    @ExceptionHandler(LateVoteException.class)
+    public ErrorInfo lateVote(HttpServletRequest req, LateVoteException e) {
+        return logAndGetErrorInfo(req, e, true, LATE_VOTE);
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422

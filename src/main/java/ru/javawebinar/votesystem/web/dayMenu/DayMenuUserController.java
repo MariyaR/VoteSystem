@@ -26,9 +26,9 @@ public class DayMenuUserController {
     }
 
     @GetMapping("/{menuId}/vote")
-    public String voteForMenu(@PathVariable int menuId) {
+    public void voteForMenu(@PathVariable int menuId) {
         log.info("user{} votes for menu {}", authUserId(), menuId);
-        return dayMenuRepository.voteForMenu(menuId, authUserId());
+        dayMenuRepository.voteForMenu(menuId, authUserId());
     }
 
 }

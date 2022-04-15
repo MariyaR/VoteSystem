@@ -10,6 +10,7 @@ import ru.javawebinar.votesystem.model.DayMenu;
 import ru.javawebinar.votesystem.model.Record;
 import ru.javawebinar.votesystem.model.Resto;
 import ru.javawebinar.votesystem.model.User;
+import ru.javawebinar.votesystem.util.exception.LateVoteException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,6 +23,8 @@ import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFoundWithId;
 
 @Repository
 public class DayMenuRepository implements ru.javawebinar.votesystem.repository.Repository<DayMenu> {
+
+    public static final LocalDateTime TIME_LIMIT = LocalDate.now().atTime(11, 00);
 
     @Autowired
     private CrudDayMenuRepository crudDayMenuRepository;
@@ -70,12 +73,12 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
     }
 
     @Transactional
-    public String voteForMenu (int menuId, int userId) {
+    public void voteForMenu (int menuId, int userId) {
         Record todayUserVote = recordRepository.getUserVote(userId);
 
        if (todayUserVote!=null) {
-           if (LocalDateTime.now().isAfter(LocalDate.now().atTime(11, 00))) {
-               return "Sorry, it is too late to change your mind";
+           if (LocalDateTime.now().isAfter(TIME_LIMIT)) {
+               throw new LateVoteException("attempt to vote after 11.00");
            } else {
                DayMenu unvotedMenu = crudDayMenuRepository.getMenuByRestoId(todayUserVote.getResto().getId());
                Assert.notNull(unvotedMenu, "unvoted Menu must not be null");
@@ -91,6 +94,5 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
         recordRepository.save(new Record(LocalDate.now(),
                 em.getReference(Resto.class, votedMenu.getResto().getId()),
                 em.getReference(User.class, userId)), userId);
-        return "Thank you! You have voted for the menu " + votedMenu.getId();
     }
 }

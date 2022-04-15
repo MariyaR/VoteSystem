@@ -53,9 +53,7 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
     @Test
     void voteForMenu() throws Exception {
         perform(doGet("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("Thank you! You have voted for the menu " + todayMenu1.getId()));
+                .andExpect(status().isOk());
         DayMenu menu = repository.get(todayMenu1.getId(), USER_ID);
         assertThat(menu.getCounter()).isEqualTo(1);
     }
@@ -65,19 +63,17 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
         perform(doGet("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
                 .andExpect(status().isOk());
 
-        final ResultActions result = perform(doGet("{menuId}/vote", todayMenu2.getId()).basicAuth(USER))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        final ResultActions result = perform(doGet("{menuId}/vote", todayMenu2.getId()).basicAuth(USER));
 
         DayMenu menu1 = repository.get(todayMenu1.getId(), USER_ID);
         DayMenu menu2 = repository.get(todayMenu2.getId(), USER_ID);
 
-        if (LocalTime.now().isBefore(LocalTime.of(11, 0))){
-            result.andExpect(content().string("Thank you! You have voted for the menu " + todayMenu2.getId()));
+        if (LocalTime.now().isBefore(repository.TIME_LIMIT.toLocalTime())){
+            result.andExpect(status().isOk());
             assertThat(menu1.getCounter()).isEqualTo(0);
             assertThat(menu2.getCounter()).isEqualTo(1);
         } else {
-            result.andExpect(content().string("Sorry, it is too late to change your mind"));
+            result.andExpect(status().isConflict());
             assertThat(menu1.getCounter()).isEqualTo(1);
             assertThat(menu2.getCounter()).isEqualTo(0);
         }
