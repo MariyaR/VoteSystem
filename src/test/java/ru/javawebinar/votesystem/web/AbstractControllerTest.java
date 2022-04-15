@@ -76,14 +76,9 @@ abstract public class AbstractControllerTest {
         return wrap(MockMvcRequestBuilders.get(url));
     }
 
-    protected RequestWrapper doGet(String pad) {
-        return wrap(MockMvcRequestBuilders.get(url + pad));
-    }
-
     protected RequestWrapper doGet(int id) {
         return doGet("{id}", id);
     }
-
 
     //doDelete
     protected RequestWrapper doDelete() {
@@ -94,7 +89,6 @@ abstract public class AbstractControllerTest {
         return wrap(MockMvcRequestBuilders.delete(url + "{id}", id));
     }
 
-
     //doPut
     protected RequestWrapper doPut() {
         return wrap(MockMvcRequestBuilders.put(url));
@@ -104,24 +98,16 @@ abstract public class AbstractControllerTest {
         return wrap(MockMvcRequestBuilders.put(url + "{id}", id));
     }
 
-
     //doPost
     protected RequestWrapper doPost(String id) throws Exception {
         return wrap(MockMvcRequestBuilders.post(url + id));
     }
-
-    protected RequestWrapper doPost(int restoId) {
-        return wrap(MockMvcRequestBuilders.post(url));
+    protected RequestWrapper doPost(String urlTemplatePad, Object... uriVars) {
+        return wrap(MockMvcRequestBuilders.post(url + urlTemplatePad, uriVars));
     }
 
     protected RequestWrapper doPost() {
         return wrap(MockMvcRequestBuilders.post(url));
-    }
-
-
-    //doPatch
-    protected RequestWrapper doPatch(int id) {
-        return wrap(MockMvcRequestBuilders.patch(url + "{id}", id));
     }
 
     //requestWrapper
@@ -157,11 +143,6 @@ abstract public class AbstractControllerTest {
 
         public RequestWrapper basicAuth(User user) {
             builder.with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()));
-            return this;
-        }
-
-        public RequestWrapper auth(User user) {
-            builder.with(SecurityMockMvcRequestPostProcessors.authentication(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())));
             return this;
         }
     }

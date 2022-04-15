@@ -52,7 +52,7 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
 
     @Test
     void voteForMenu() throws Exception {
-        perform(doGet("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
+        perform(doPost("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
                 .andExpect(status().isOk());
         DayMenu menu = repository.get(todayMenu1.getId(), USER_ID);
         assertThat(menu.getCounter()).isEqualTo(1);
@@ -60,10 +60,10 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
 
     @Test
     void reVoteForMenu() throws Exception {
-        perform(doGet("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
+        perform(doPost("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
                 .andExpect(status().isOk());
 
-        final ResultActions result = perform(doGet("{menuId}/vote", todayMenu2.getId()).basicAuth(USER));
+        final ResultActions result = perform(doPost("{menuId}/vote", todayMenu2.getId()).basicAuth(USER));
 
         DayMenu menu1 = repository.get(todayMenu1.getId(), USER_ID);
         DayMenu menu2 = repository.get(todayMenu2.getId(), USER_ID);
