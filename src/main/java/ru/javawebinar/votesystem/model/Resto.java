@@ -16,7 +16,6 @@ public class Resto extends AbstractNamedEntity {
     @NotBlank
     private String address;
 
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resto", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
     @JsonIgnore
@@ -56,7 +55,6 @@ public class Resto extends AbstractNamedEntity {
         this.history = history;
     }
 
-
     @Override
     public String toString() {
         return "Resto{" +
@@ -65,5 +63,4 @@ public class Resto extends AbstractNamedEntity {
                 ", id=" + id +
                 '}';
     }
-
 }

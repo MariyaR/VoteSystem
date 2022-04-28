@@ -43,9 +43,7 @@ public class UserRepository implements ru.javawebinar.votesystem.repository.Repo
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }
 
-
     public User getWithHistory(int id) {
-
         return checkNotFoundWithId(crudRepository.getWithRecords(id), id);
     }
 }

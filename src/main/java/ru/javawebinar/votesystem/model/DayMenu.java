@@ -1,16 +1,12 @@
 package ru.javawebinar.votesystem.model;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.javawebinar.votesystem.util.HashMapConverter;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
-
 
 @Entity
 @Table(name = "restos_history")
@@ -21,13 +17,11 @@ public class DayMenu extends AbstractBaseEntity {
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private LocalDate date;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "resto_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     //@JsonBackReference
     private Resto resto;
-
 
     @Convert(converter = HashMapConverter.class)
     @Column(name = "resto_menu")
@@ -106,5 +100,4 @@ public class DayMenu extends AbstractBaseEntity {
                 ", counter=" + counter +
                 '}';
     }
-
 }

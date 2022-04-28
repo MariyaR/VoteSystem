@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-
 @Entity
 @Table(name = "voting_history")
 public class Record extends AbstractBaseEntity {
@@ -17,7 +16,6 @@ public class Record extends AbstractBaseEntity {
     @NotNull
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private LocalDate date;
-
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "resto_id", nullable = false)

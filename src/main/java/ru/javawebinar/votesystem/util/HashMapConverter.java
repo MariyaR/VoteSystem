@@ -41,5 +41,4 @@ public class HashMapConverter implements AttributeConverter<Map<String, Long>, S
 
         return menu;
     }
-
 }
