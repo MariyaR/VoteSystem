@@ -21,13 +21,11 @@ public class UserRepository implements ru.javawebinar.votesystem.repository.Repo
     @Autowired
     private CrudUserRepository crudRepository;
 
-    @CacheEvict(value = "users", allEntries = true)
     public User save(User user, int userId) {
         Assert.notNull(user, "user must not be null");
         return crudRepository.save(user);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id, int userId) {
         checkNotFoundWithId(crudRepository.delete(id) != 0, id);
     }
@@ -41,7 +39,6 @@ public class UserRepository implements ru.javawebinar.votesystem.repository.Repo
         return checkNotFound(crudRepository.getByEmail(email), "email=" + email);
     }
 
-    @Cacheable("users")
     public List<User> getAllEntries(int userId) {
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }

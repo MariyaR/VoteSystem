@@ -4,7 +4,9 @@ package ru.javawebinar.votesystem.web;
 import ru.javawebinar.votesystem.model.User;
 import ru.javawebinar.votesystem.to.UserTo;
 import ru.javawebinar.votesystem.util.UserUtil;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     private static final long serialVersionUID = 1L;
 
