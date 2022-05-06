@@ -1,0 +1,6 @@
+Dockerfile
+.git
+.idea
+.maven-dockerexclude
+target/classes/**
+src/test/**
