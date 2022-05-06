@@ -7,6 +7,9 @@ login: admin@gmail.com
 password: admin
 
 the application is run via cargo-plugin, cargo:run
+also can be run in docker container via fbric8 docker-maven-plugin:
+mvn package
+mvn docker:run
 
 some possible requests: 
 
@@ -21,3 +24,4 @@ localhost:8080/VoteSystem/profile/history - get voting hystory of logged user
 
 swagger documentation:
 http://localhost:8080/VoteSystem/v2/api-docs
+http://localhost:8080/VoteSystem/swagger-ui.html
