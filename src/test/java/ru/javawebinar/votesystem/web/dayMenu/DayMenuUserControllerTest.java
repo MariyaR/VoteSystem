@@ -3,6 +3,7 @@ package ru.javawebinar.votesystem.web.dayMenu;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.votesystem.model.DayMenu;
 import ru.javawebinar.votesystem.repository.DayMenuRepository;
@@ -17,8 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.votesystem.RestoTestData.*;
-import static ru.javawebinar.votesystem.UserTestData.USER;
-import static ru.javawebinar.votesystem.UserTestData.USER_ID;
+import static ru.javawebinar.votesystem.UserTestData.*;
 import static ru.javawebinar.votesystem.web.DayMenuTestData.*;
 
 public class DayMenuUserControllerTest extends AbstractControllerTest {
@@ -43,27 +43,30 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void getTodayMenues() throws Exception {
-        perform(doGet().basicAuth(USER))
+        perform(doGet())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DayMenu_MATCHERS.contentJson(DAY_MENU_TODAY_1, DAY_MENU_TODAY_2, DAY_MENU_TODAY_3));
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void voteForMenu() throws Exception {
-        perform(doPost("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
+        perform(doPost("{menuId}/vote", todayMenu1.getId()))
                 .andExpect(status().isOk());
         DayMenu menu = repository.get(todayMenu1.getId(), USER_ID);
         assertThat(menu.getCounter()).isEqualTo(1);
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void reVoteForMenu() throws Exception {
-        perform(doPost("{menuId}/vote", todayMenu1.getId()).basicAuth(USER))
+        perform(doPost("{menuId}/vote", todayMenu1.getId()))
                 .andExpect(status().isOk());
 
-        final ResultActions result = perform(doPost("{menuId}/vote", todayMenu2.getId()).basicAuth(USER));
+        final ResultActions result = perform(doPost("{menuId}/vote", todayMenu2.getId()));
 
         DayMenu menu1 = repository.get(todayMenu1.getId(), USER_ID);
         DayMenu menu2 = repository.get(todayMenu2.getId(), USER_ID);

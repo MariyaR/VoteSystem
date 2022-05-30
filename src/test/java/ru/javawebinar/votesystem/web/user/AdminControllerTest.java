@@ -2,6 +2,7 @@ package ru.javawebinar.votesystem.web.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javawebinar.votesystem.TestUtil;
 import ru.javawebinar.votesystem.UserTestData;
 import ru.javawebinar.votesystem.model.User;
@@ -29,8 +30,9 @@ class AdminControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(doGet(ADMIN_ID).basicAuth(ADMIN))
+        perform(doGet(ADMIN_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
@@ -46,24 +48,27 @@ class AdminControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void getByEmail() throws Exception {
-        perform(doGet("by?email={email}", ADMIN.getEmail()).basicAuth(ADMIN))
+        perform(doGet("by?email={email}", ADMIN.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHERS.contentJson(ADMIN));
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(doDelete(USER_ID).basicAuth(ADMIN))
+        perform(doDelete(USER_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> repository.get(USER_ID, USER_ID));
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
-        perform(doDelete(1).basicAuth(ADMIN))
+        perform(doDelete(1))
                 .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
@@ -75,23 +80,26 @@ class AdminControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void getForbidden() throws Exception {
-        perform(doGet().basicAuth(USER))
+        perform(doGet())
                 .andExpect(status().isForbidden());
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         User updated = UserTestData.getUpdated();
-        perform(doPut(USER_ID).jsonBody(updated).basicAuth(ADMIN))
+        perform(doPut(USER_ID).jsonBody(updated))
                 .andExpect(status().isNoContent());
         USER_MATCHERS.assertMatch(repository.get(USER_ID, USER_ID), updated);
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         User newUser = UserTestData.getNew();
-        ResultActions action = perform(doPost().jsonUserWithPassword(newUser).basicAuth(ADMIN))
+        ResultActions action = perform(doPost().jsonUserWithPassword(newUser))
                 .andExpect(status().isCreated());
 
         User created = TestUtil.readFromJson(action, User.class);
@@ -102,8 +110,9 @@ class AdminControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
-        perform(doGet().basicAuth(ADMIN))
+        perform(doGet())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHERS.contentJson(ADMIN, USER, USER2, USER3));

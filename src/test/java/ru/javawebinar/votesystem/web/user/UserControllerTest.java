@@ -3,6 +3,7 @@ package ru.javawebinar.votesystem.web.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.votesystem.model.Role;
 import ru.javawebinar.votesystem.model.User;
@@ -29,8 +30,9 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(doGet().basicAuth(USER))
+        perform(doGet())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHERS.contentJson(USER));
@@ -43,15 +45,16 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(doDelete().basicAuth(USER))
+        perform(doDelete())
                 .andExpect(status().isNoContent());
         USER_MATCHERS.assertMatch(userRepository.getAllEntries(USER_ID), ADMIN, USER2, USER3);
     }
 
     @Test
     void register() throws Exception {
-        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", null, Set.of(Role.ROLE_USER ));
+        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", null, Set.of(Role.USER));
         User newUser = UserUtil.createNewFromTo(newTo);
         ResultActions action = perform(doPost("/register").jsonBody(newTo))
                 .andDo(print())
@@ -65,9 +68,10 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
-        UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", null, Set.of(Role.ROLE_USER ));
-        perform(doPut().jsonBody(updatedTo).basicAuth(USER))
+        UserTo updatedTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", null, Set.of(Role.USER));
+        perform(doPut().jsonBody(updatedTo))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 

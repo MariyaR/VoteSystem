@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.votesystem.model.User;
 import ru.javawebinar.votesystem.repository.UserRepository;
 import ru.javawebinar.votesystem.to.UserTo;
 import ru.javawebinar.votesystem.util.UserUtil;
+import ru.javawebinar.votesystem.web.AuthorizedUser;
 
 
 import java.util.List;
-
-import static ru.javawebinar.votesystem.web.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(value = AdminController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,8 +23,8 @@ public class AdminController extends AbstractUserController {
     static final String REST_URL = "/admin/users";
 
     @GetMapping
-    public List<UserTo> getAll() {
-        return UserUtil.getTos(super.getAllEntries(authUserId()));
+    public List<UserTo> getAll(@AuthenticationPrincipal AuthorizedUser authUser) {
+        return UserUtil.getTos(super.getAllEntries(authUser.getId()));
     }
 
     @GetMapping("/{id}")
@@ -52,6 +53,7 @@ public class AdminController extends AbstractUserController {
     @GetMapping("/by")
     public UserTo getByMail(@RequestParam String email) {
         log.info("getByEmail {}", email);
-        return UserUtil.createTo(userRepository.getByEmail(email));
+        return UserUtil.createTo(userRepository.getByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + email + " is not found")));
     }
 }

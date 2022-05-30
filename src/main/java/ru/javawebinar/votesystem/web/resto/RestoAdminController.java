@@ -6,18 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.votesystem.model.Resto;
 import ru.javawebinar.votesystem.repository.RestoRepository;
 import ru.javawebinar.votesystem.to.RestoTo;
 import ru.javawebinar.votesystem.util.Util;
 import ru.javawebinar.votesystem.web.AbstractController;
+import ru.javawebinar.votesystem.web.AuthorizedUser;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.assureIdConsistent;
-import static ru.javawebinar.votesystem.web.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(value = RestoAdminController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,8 +36,8 @@ public class RestoAdminController extends AbstractController<Resto> {
     }
 
     @GetMapping
-    public List<RestoTo> getAll() {
-        return Util.getRestoTos(super.getAllEntries(authUserId()));
+    public List<RestoTo> getAll(@AuthenticationPrincipal AuthorizedUser authUser) {
+        return Util.getRestoTos(super.getAllEntries(authUser.getId()));
     }
 
     @GetMapping("/{id}")

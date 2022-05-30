@@ -8,8 +8,6 @@ import ru.javawebinar.votesystem.repository.Repository;
 import java.net.URI;
 import java.util.List;
 
-import static ru.javawebinar.votesystem.web.SecurityUtil.authUserId;
-
 public abstract class AbstractController <T extends HasId>{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

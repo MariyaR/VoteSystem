@@ -21,19 +21,22 @@ public class UserTestData {
     public static final int USER_ID = AbstractBaseEntity.START_SEQ;
     public static final int ADMIN_ID = AbstractBaseEntity.START_SEQ + 1;
 
-    public static final User USER = new User(USER_ID, "User1", "user1@yandex.ru", "password", Role.ROLE_USER);
-    public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN, Role.ROLE_USER);
-    public static final User USER2 = new User(USER_ID + 2, "User2", "user2@yandex.ru", "password", Role.ROLE_USER);
-    public static final User USER3 = new User(USER_ID + 3, "User3", "user3@yandex.ru", "password", Role.ROLE_USER);
+    public static final String USER_MAIL = "user1@yandex.ru";
+    public static final String ADMIN_MAIL = "admin@gmail.com";
+    public static final User USER = new User(USER_ID, "User1", USER_MAIL, "password", Role.USER);
+    public static final User ADMIN = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN, Role.USER);
+    public static final User USER2 = new User(USER_ID + 2, "User2", "user2@yandex.ru", "password", Role.USER);
+    public static final User USER3 = new User(USER_ID + 3, "User3", "user3@yandex.ru", "password", Role.USER);
+
 
     public static User getNew() {
-        return new User(null, "New", "new@gmail.com", "newPass", LocalDate.now(), Collections.singleton(Role.ROLE_USER));
+        return new User(null, "New", "new@gmail.com", "newPass", LocalDate.now(), Collections.singleton(Role.USER));
     }
 
     public static User getUpdated() {
         User updated = new User(USER);
         updated.setName("UpdatedName");
-        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
+        updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
     }
 

@@ -3,11 +3,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.votesystem.model.DayMenu;
 import ru.javawebinar.votesystem.repository.DayMenuRepository;
+import ru.javawebinar.votesystem.web.AuthorizedUser;
+
 import java.util.List;
-import static ru.javawebinar.votesystem.web.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(value = DayMenuUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,9 +28,9 @@ public class DayMenuUserController {
     }
 
     @PostMapping("/{menuId}/vote")
-    public void voteForMenu(@PathVariable int menuId) {
-        log.info("user{} votes for menu {}", authUserId(), menuId);
-        dayMenuRepository.voteForMenu(menuId, authUserId());
+    public void voteForMenu(@PathVariable int menuId, @AuthenticationPrincipal AuthorizedUser authUser) {
+        log.info("user{} votes for menu {}", authUser.getId(), menuId);
+        dayMenuRepository.voteForMenu(menuId, authUser.getId());
     }
 
 }

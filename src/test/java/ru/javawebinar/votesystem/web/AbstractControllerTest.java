@@ -1,6 +1,8 @@
 package ru.javawebinar.votesystem.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -23,12 +25,9 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static ru.javawebinar.votesystem.web.AbstractControllerTest.RequestWrapper.wrap;
 
 
-@SpringJUnitWebConfig(locations = {
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-mvc.xml",
-        "classpath:spring/spring-db.xml"
-})
+@SpringBootTest
 @Transactional
+@AutoConfigureMockMvc
 abstract public class AbstractControllerTest {
 
     protected static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();

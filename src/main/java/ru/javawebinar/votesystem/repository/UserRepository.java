@@ -10,6 +10,7 @@ import ru.javawebinar.votesystem.model.User;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFoundWithId;
@@ -34,9 +35,9 @@ public class UserRepository implements ru.javawebinar.votesystem.repository.Repo
         return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
     }
 
-    public User getByEmail(String email) {
+    public Optional<User> getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
-        return checkNotFound(crudRepository.getByEmail(email), "email=" + email);
+        return crudRepository.getByEmail(email);
     }
 
     public List<User> getAllEntries(int userId) {

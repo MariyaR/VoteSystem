@@ -3,6 +3,7 @@ package ru.javawebinar.votesystem.web.resto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.votesystem.RestoTestData;
 import ru.javawebinar.votesystem.TestUtil;
@@ -29,8 +30,9 @@ public class RestoControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(doGet(RESTO_ID).basicAuth(ADMIN))
+        perform(doGet(RESTO_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
@@ -39,8 +41,9 @@ public class RestoControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void getWithHystory() throws Exception {
-        perform(doGet( "{id}/history", RESTO_ID).basicAuth(ADMIN))
+        perform(doGet( "{id}/history", RESTO_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
@@ -49,8 +52,9 @@ public class RestoControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void getNotFound() throws Exception {
-        perform(doGet(1).basicAuth(ADMIN))
+        perform(doGet(1))
                 .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
@@ -62,8 +66,9 @@ public class RestoControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(doDelete(RESTO_ID).basicAuth(ADMIN))
+        perform(doDelete(RESTO_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> repository.get(RESTO_ID, RESTO_ID));
@@ -71,30 +76,34 @@ public class RestoControllerTest extends AbstractControllerTest {
 
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
-        perform(doDelete(1).basicAuth(ADMIN))
+        perform(doDelete(1))
                 .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void getForbidden() throws Exception {
-        perform(doGet(RESTO_ID).basicAuth(USER))
+        perform(doGet(RESTO_ID))
                 .andExpect(status().isForbidden());
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         Resto updated = RestoTestData.getUpdated();
-        perform(doPut(RESTO_ID).jsonBody(updated).basicAuth(ADMIN))
+        perform(doPut(RESTO_ID).jsonBody(updated))
                 .andExpect(status().isNoContent());
         RESTO_MATCHERS.assertMatch(repository.get(RESTO_ID, RESTO_ID), updated);
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         Resto newResto = RestoTestData.getNew();
-        ResultActions action = perform(doPost().jsonBody(newResto).basicAuth(ADMIN))
+        ResultActions action = perform(doPost().jsonBody(newResto))
                 .andExpect(status().isCreated());
 
         Resto created = TestUtil.readFromJson(action, Resto.class);
@@ -105,8 +114,9 @@ public class RestoControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
-        perform(doGet().basicAuth(ADMIN))
+        perform(doGet())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTO_MATCHERS.contentJson(RESTO_1, RESTO_2, RESTO_3));

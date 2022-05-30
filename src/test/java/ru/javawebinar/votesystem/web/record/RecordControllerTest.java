@@ -1,9 +1,8 @@
 package ru.javawebinar.votesystem.web.record;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import ru.javawebinar.votesystem.repository.RecordRepository;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javawebinar.votesystem.util.Util;
 import ru.javawebinar.votesystem.web.AbstractControllerTest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -13,16 +12,14 @@ import static ru.javawebinar.votesystem.UserTestData.*;
 
 public class RecordControllerTest extends AbstractControllerTest {
 
-   // @Autowired
-   // private RecordRepository recordRepository;
-
     RecordControllerTest() {
         super(RecordController.REST_URL);
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(doGet(RECORD_ID).basicAuth(USER))
+        perform(doGet(RECORD_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RECORD_MATCHERS.contentJson(Util.createTo(RECORD_1)));
@@ -35,14 +32,16 @@ public class RecordControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void getNotOwn() throws Exception {
-        perform(doGet(RECORD_ID+1).basicAuth(USER))
+        perform(doGet(RECORD_ID+1))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
+    @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(doGet().basicAuth(USER))
+        perform(doGet())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RECORD_MATCHERS.contentJson(Util.createTo(RECORD_2), Util.createTo(RECORD_1)));
