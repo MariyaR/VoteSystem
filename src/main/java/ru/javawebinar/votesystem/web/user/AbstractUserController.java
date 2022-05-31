@@ -6,9 +6,12 @@ import ru.javawebinar.votesystem.model.User;
 import ru.javawebinar.votesystem.repository.UserRepository;
 import ru.javawebinar.votesystem.to.UserTo;
 import ru.javawebinar.votesystem.util.UserUtil;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractController;
 
 import javax.annotation.PostConstruct;
+
+import java.util.Optional;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.assureIdConsistent;
 
@@ -19,7 +22,7 @@ public class AbstractUserController extends AbstractController<User> {
 
     @PostConstruct
     public void init() {
-        this.repository = userRepository;
+        super.repository = userRepository;
     }
 
     public ResponseEntity<User> createWithLocation(UserTo userTo, String rest_url) {
@@ -29,8 +32,12 @@ public class AbstractUserController extends AbstractController<User> {
     public void update(UserTo userTo, int id) {
         log.info("update {} with id={}", userTo, id);
         assureIdConsistent(userTo, id);
-        User user = repository.get(userTo.id(), id);
-        repository.save(UserUtil.updateFromTo(user, userTo), id); //UserUtil.updateFromTo(user, userTo)
+        User user = userRepository.get(userTo.id()).orElseThrow(() -> new NotFoundException(String.format("user with id %d was not found", userTo.id())));
+        userRepository.save(UserUtil.updateFromTo(user, userTo), id);
     }
 
+    protected Optional<User> getById(int id) {
+        log.info("getById {} with id={}", id);
+        return userRepository.get(id);
+    }
 }

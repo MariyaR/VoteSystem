@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.javawebinar.votesystem.model.Resto;
 
+import java.util.Optional;
+
 
 @Transactional(readOnly = true)
 public interface CrudRestoRepository extends JpaRepository<Resto, Integer> {
@@ -21,6 +23,6 @@ public interface CrudRestoRepository extends JpaRepository<Resto, Integer> {
     //    https://stackoverflow.com/a/46013654/548473
     @EntityGraph(attributePaths = {"history"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Resto r WHERE r.id=?1")
-    Resto getWitHistory(int id);
+    Optional<Resto> getWitHistory(int id);
 
 }

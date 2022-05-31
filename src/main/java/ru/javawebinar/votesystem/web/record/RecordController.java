@@ -10,6 +10,7 @@ import ru.javawebinar.votesystem.model.Record;
 import ru.javawebinar.votesystem.repository.RecordRepository;
 import ru.javawebinar.votesystem.to.RecordTo;
 import ru.javawebinar.votesystem.util.Util;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractController;
 import ru.javawebinar.votesystem.web.AuthorizedUser;
 
@@ -32,7 +33,8 @@ public class RecordController extends AbstractController<Record> {
 
     @GetMapping("/{id}")
     public RecordTo get(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
-        return Util.createTo(super.getById(id, authUser.getId()));
+        log.info("getById {} with id={}", id);
+        return Util.createTo(recordRepository.get(id, authUser.getId()));
     }
 
     @GetMapping

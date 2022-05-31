@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.votesystem.model.Record;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface CrudRecordRepository extends JpaRepository<Record, Integer> {
@@ -26,10 +27,10 @@ public interface CrudRecordRepository extends JpaRepository<Record, Integer> {
 
 
     @Query("SELECT r FROM Record r JOIN FETCH r.user WHERE r.id = ?1 and r.user.id = ?2")
-    Record getWithUser(int id, int userId);
+    Optional<Record> getWithUser(int id, int userId);
 
     @Query("SELECT r FROM Record r WHERE r.user.id =:userId and r.date = CURRENT_DATE ")
-    Record getUserVote(@Param("userId") int userId);
+    Optional<Record> getUserVote(@Param("userId") int userId);
 
     @Query("SELECT r FROM Record r WHERE r.date = CURRENT_DATE ")
     List<Record> getTodayRecords();

@@ -12,13 +12,16 @@ import ru.javawebinar.votesystem.repository.RestoRepository;
 import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractControllerTest;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.votesystem.RestoTestData.RESTO_ID;
 import static ru.javawebinar.votesystem.RestoTestData.*;
 import static ru.javawebinar.votesystem.UserTestData.*;
+import static ru.javawebinar.votesystem.web.DayMenuTestData.MENU_ID;
 
 public class RestoControllerTest extends AbstractControllerTest {
 
@@ -71,7 +74,8 @@ public class RestoControllerTest extends AbstractControllerTest {
         perform(doDelete(RESTO_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(RESTO_ID, RESTO_ID));
+        assertTrue(repository.get(RESTO_ID).isEmpty());
+        //assertThrows(NotFoundException.class, () -> repository.get(RESTO_ID));
     }
 
 
@@ -96,7 +100,8 @@ public class RestoControllerTest extends AbstractControllerTest {
         Resto updated = RestoTestData.getUpdated();
         perform(doPut(RESTO_ID).jsonBody(updated))
                 .andExpect(status().isNoContent());
-        RESTO_MATCHERS.assertMatch(repository.get(RESTO_ID, RESTO_ID), updated);
+        assertEquals(repository.get(RESTO_ID), Optional.of(updated));
+        //RESTO_MATCHERS.assertMatch(repository.get(RESTO_ID).orElse(null), updated);
     }
 
     @Test
@@ -110,7 +115,8 @@ public class RestoControllerTest extends AbstractControllerTest {
         Integer newId = created.getId();
         newResto.setId(newId);
         RESTO_MATCHERS.assertMatch(created, newResto);
-        RESTO_MATCHERS.assertMatch(repository.get(newId, newId), newResto);
+        assertEquals(repository.get(newId), Optional.of(newResto));
+        //RESTO_MATCHERS.assertMatch(repository.get(newId).orElse(null), newResto);
     }
 
     @Test

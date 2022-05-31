@@ -10,13 +10,15 @@ import ru.javawebinar.votesystem.repository.UserRepository;
 import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractControllerTest;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Optional;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static ru.javawebinar.votesystem.UserTestData.*;
 
@@ -62,7 +64,8 @@ class AdminControllerTest extends AbstractControllerTest {
         perform(doDelete(USER_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(USER_ID, USER_ID));
+        assertTrue(repository.get(USER_ID).isEmpty());
+        //assertThrows(NotFoundException.class, () -> repository.get(USER_ID));
     }
 
     @Test
@@ -92,7 +95,8 @@ class AdminControllerTest extends AbstractControllerTest {
         User updated = UserTestData.getUpdated();
         perform(doPut(USER_ID).jsonBody(updated))
                 .andExpect(status().isNoContent());
-        USER_MATCHERS.assertMatch(repository.get(USER_ID, USER_ID), updated);
+        assertEquals(repository.get(USER_ID), Optional.of(updated));
+        //USER_MATCHERS.assertMatch(repository.get(USER_ID), updated);
     }
 
     @Test
@@ -106,7 +110,8 @@ class AdminControllerTest extends AbstractControllerTest {
         Integer newId = created.getId();
         newUser.setId(newId);
         USER_MATCHERS.assertMatch(created, newUser);
-        USER_MATCHERS.assertMatch(repository.get(newId, newId), newUser);
+        assertEquals(repository.get(newId), Optional.of(newUser));
+        //USER_MATCHERS.assertMatch(, newUser);
     }
 
     @Test

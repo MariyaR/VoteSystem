@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFoundWithId;
@@ -39,7 +40,7 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
     @Transactional
     public DayMenu save(DayMenu menu, int restoId) {
         Assert.notNull(menu, "menu must not be null");
-        if (!menu.isNew() && get(menu.getId(), restoId) == null) {
+        if (!menu.isNew() && get(menu.getId()).isEmpty()) {
             return null;
         }
         menu.setResto(em.getReference(Resto.class, restoId));
@@ -51,16 +52,16 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
         checkNotFoundWithId(crudDayMenuRepository.delete(id)!=0, id);
     }
 
-    public DayMenu get(int id, int userId) {
-        return checkNotFoundWithId(crudDayMenuRepository.findById(id).orElse(null),id);
+    public Optional<DayMenu> get(int id) {
+        return crudDayMenuRepository.findById(id);
     }
 
     public List<DayMenu> getAllEntries(int restoId) {
         return crudDayMenuRepository.getAll(restoId);
     }
 
-    public DayMenu getWithResto(int id) {
-        return checkNotFoundWithId(crudDayMenuRepository.getWithResto(id), id);
+    public Optional<DayMenu> getWithResto(int id) {
+        return crudDayMenuRepository.getWithResto(id);
     }
 
     public List<DayMenu> getByDate(LocalDate date) {
@@ -73,26 +74,29 @@ public class DayMenuRepository implements ru.javawebinar.votesystem.repository.R
     }
 
     @Transactional
-    public void voteForMenu (int menuId, int userId) {
-        Record todayUserVote = recordRepository.getUserVote(userId);
+    public void voteForMenu(int menuId, int userId) {
+        Optional<Record> todayUserVote = recordRepository.getUserVote(userId);
 
-       if (todayUserVote!=null) {
-           if (LocalDateTime.now().isAfter(TIME_LIMIT)) {
-               throw new LateVoteException("attempt to vote after 11.00");
-           } else {
-               DayMenu unvotedMenu = crudDayMenuRepository.getMenuByRestoId(todayUserVote.getResto().getId());
-               Assert.notNull(unvotedMenu, "unvoted Menu must not be null");
-               unvotedMenu.unvote();
-               crudDayMenuRepository.save(unvotedMenu);
-               recordRepository.delete(todayUserVote.getId(), userId);
-           }
+        todayUserVote.ifPresent(vote -> {
+                    if (LocalDateTime.now().isAfter(TIME_LIMIT)) {
+                        throw new LateVoteException("attempt to vote after 11.00");
+                    } else {
+                        DayMenu unvotedMenu = crudDayMenuRepository.getMenuByRestoId(vote.getResto().getId())
+                                .orElseThrow(() -> new IllegalArgumentException("unvoted Menu must not be null"));
+                        unvotedMenu.unvote();
+                        crudDayMenuRepository.save(unvotedMenu);
+                        recordRepository.delete(vote.getId(), userId);
+                    }
+                }
+        );
 
-       }
-        DayMenu votedMenu = get(menuId, userId);
-        votedMenu.vote();
-        crudDayMenuRepository.save(votedMenu);
-        recordRepository.save(new Record(LocalDate.now(),
-                em.getReference(Resto.class, votedMenu.getResto().getId()),
-                em.getReference(User.class, userId)), userId);
+        Optional<DayMenu> votedMenu = get(menuId);
+        votedMenu.ifPresent(menu -> {
+            menu.vote();
+            crudDayMenuRepository.save(menu);
+            recordRepository.save(new Record(LocalDate.now(),
+                    em.getReference(Resto.class, menu.getResto().getId()),
+                    em.getReference(User.class, userId)), userId);
+        });
     }
 }

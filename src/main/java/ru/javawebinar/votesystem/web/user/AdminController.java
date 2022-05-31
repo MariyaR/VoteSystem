@@ -11,6 +11,7 @@ import ru.javawebinar.votesystem.model.User;
 import ru.javawebinar.votesystem.repository.UserRepository;
 import ru.javawebinar.votesystem.to.UserTo;
 import ru.javawebinar.votesystem.util.UserUtil;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AuthorizedUser;
 
 
@@ -29,7 +30,7 @@ public class AdminController extends AbstractUserController {
 
     @GetMapping("/{id}")
     public UserTo get(@PathVariable int id) {
-        User user = super.getById(id, id);
+        User user = super.getById(id).orElseThrow(() -> new NotFoundException(String.format("user with id %d was not found", id)));
         return UserUtil.createTo(user);
     }
 

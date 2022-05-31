@@ -23,5 +23,7 @@ localhost:8080/VoteSystem/profile - get logged user
 localhost:8080/VoteSystem/profile/history - get voting hystory of logged user
 
 swagger documentation:
-http://localhost:8080/VoteSystem/v2/api-docs
+http://localhost:8080/VoteSystem/v2/api-docs 
+or alternatively http://localhost:8080/VoteSystem/v3/api-docs 
+link for swagger ui:
 http://localhost:8080/VoteSystem/swagger-ui.html

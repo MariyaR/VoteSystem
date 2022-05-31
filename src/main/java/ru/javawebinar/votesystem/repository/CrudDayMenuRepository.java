@@ -9,6 +9,7 @@ import ru.javawebinar.votesystem.model.DayMenu;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface CrudDayMenuRepository extends JpaRepository<DayMenu, Integer> {
@@ -26,11 +27,11 @@ public interface CrudDayMenuRepository extends JpaRepository<DayMenu, Integer> {
     List<DayMenu> getAll(@Param("restoId") int restoId);
 
     @Query("SELECT dm FROM DayMenu dm JOIN FETCH dm.resto WHERE dm.id = ?1")
-    DayMenu getWithResto(int id);
+    Optional<DayMenu> getWithResto(int id);
 
     @Query("SELECT dm FROM DayMenu dm JOIN FETCH dm.resto WHERE dm.date=:date ORDER BY dm.resto.name")
     List<DayMenu> getByDate(@Param("date") LocalDate date);
 
     @Query("SELECT dm FROM DayMenu dm  WHERE dm.resto.id=:restoId AND dm.date = CURRENT_DATE")
-    DayMenu getMenuByRestoId(@Param("restoId") int restoId);
+    Optional<DayMenu> getMenuByRestoId(@Param("restoId") int restoId);
 }

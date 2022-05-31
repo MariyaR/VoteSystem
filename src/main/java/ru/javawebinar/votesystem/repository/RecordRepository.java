@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 import ru.javawebinar.votesystem.model.Record;
 
 import java.util.List;
+import java.util.Optional;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFoundWithId;
 
@@ -38,11 +39,11 @@ public class RecordRepository implements ru.javawebinar.votesystem.repository.Re
         return crudRecordRepository.getAll(userId);
     }
 
-    public Record getWithUser(int id, int userId) {
-        return checkNotFoundWithId(crudRecordRepository.getWithUser(id, userId), id);
+    public Optional<Record> getWithUser(int id, int userId) {
+        return crudRecordRepository.getWithUser(id, userId);
     }
 
-    public Record getUserVote(int userId) {
+    public Optional<Record> getUserVote(int userId) {
         return crudRecordRepository.getUserVote(userId);
     }
 

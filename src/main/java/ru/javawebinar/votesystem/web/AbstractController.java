@@ -4,7 +4,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.votesystem.HasId;
+import ru.javawebinar.votesystem.model.User;
 import ru.javawebinar.votesystem.repository.Repository;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
+
 import java.net.URI;
 import java.util.List;
 
@@ -12,12 +15,7 @@ public abstract class AbstractController <T extends HasId>{
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-     protected Repository<T> repository;
-
-    public T getById(int id, int userId) {
-        log.info("get {}", id);
-        return repository.get(id, userId);
-    }
+    protected Repository<T> repository;
 
     public void deleteById(int id) {
         log.info("delete {}", id);
@@ -37,4 +35,5 @@ public abstract class AbstractController <T extends HasId>{
         log.info("getAll");
         return repository.getAllEntries(id);
     }
+
 }

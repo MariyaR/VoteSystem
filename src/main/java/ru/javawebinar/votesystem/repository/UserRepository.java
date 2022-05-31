@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import ru.javawebinar.votesystem.model.User;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 
 
 import java.util.List;
@@ -31,8 +32,8 @@ public class UserRepository implements ru.javawebinar.votesystem.repository.Repo
         checkNotFoundWithId(crudRepository.delete(id) != 0, id);
     }
 
-    public User get(int id, int userId) {
-        return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
+    public Optional<User> get(int id) {
+        return crudRepository.findById(id);
     }
 
     public Optional<User> getByEmail(String email) {
@@ -44,7 +45,7 @@ public class UserRepository implements ru.javawebinar.votesystem.repository.Repo
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }
 
-    public User getWithHistory(int id) {
-        return checkNotFoundWithId(crudRepository.getWithRecords(id), id);
+    public Optional <User> getWithHistory(int id) {
+        return crudRepository.getWithRecords(id);
     }
 }

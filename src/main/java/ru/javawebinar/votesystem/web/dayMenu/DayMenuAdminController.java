@@ -11,6 +11,7 @@ import ru.javawebinar.votesystem.model.DayMenu;
 import ru.javawebinar.votesystem.repository.DayMenuRepository;
 import ru.javawebinar.votesystem.to.DayMenuTo;
 import ru.javawebinar.votesystem.util.Util;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractController;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +40,8 @@ public class DayMenuAdminController extends AbstractController<DayMenu> {
 
     @GetMapping("/{id}")
     public DayMenuTo get(@PathVariable int id) {
-      return Util.createTo(super.getById(id, id));
+      return Util.createTo(dayMenuRepository.get(id)
+              .orElseThrow(() -> new NotFoundException(String.format("day menu with id %d is not found", id))));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -58,8 +60,9 @@ public class DayMenuAdminController extends AbstractController<DayMenu> {
     public void update(@RequestBody DayMenuTo dayMenuTo, @PathVariable int restoId) {
         log.info("update {} with restoId={}", dayMenuTo, restoId);
         assureRestoIdConsistent(dayMenuTo, restoId);
-        DayMenu dayMenu = dayMenuRepository.get(dayMenuTo.getId(), restoId);
-        dayMenuRepository.save(Util.updateFromToDayMenu(dayMenu, dayMenuTo), restoId);
+        dayMenuRepository.get(dayMenuTo.getId()).ifPresent(dayMenu -> {
+            dayMenuRepository.save(Util.updateFromToDayMenu(dayMenu, dayMenuTo), restoId);
+        });
     }
 
 }

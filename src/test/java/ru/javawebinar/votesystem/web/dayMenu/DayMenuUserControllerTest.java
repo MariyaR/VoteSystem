@@ -7,6 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.votesystem.model.DayMenu;
 import ru.javawebinar.votesystem.repository.DayMenuRepository;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractControllerTest;
 
 import javax.annotation.PostConstruct;
@@ -56,7 +57,8 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
     void voteForMenu() throws Exception {
         perform(doPost("{menuId}/vote", todayMenu1.getId()))
                 .andExpect(status().isOk());
-        DayMenu menu = repository.get(todayMenu1.getId(), USER_ID);
+        DayMenu menu = repository.get(todayMenu1.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("menu with id %d was not found", todayMenu1.getId())));
         assertThat(menu.getCounter()).isEqualTo(1);
     }
 
@@ -68,8 +70,10 @@ public class DayMenuUserControllerTest extends AbstractControllerTest {
 
         final ResultActions result = perform(doPost("{menuId}/vote", todayMenu2.getId()));
 
-        DayMenu menu1 = repository.get(todayMenu1.getId(), USER_ID);
-        DayMenu menu2 = repository.get(todayMenu2.getId(), USER_ID);
+        DayMenu menu1 = repository.get(todayMenu1.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("menu with id %d was not found", todayMenu1.getId())));
+        DayMenu menu2 = repository.get(todayMenu2.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("menu with id %d was not found", todayMenu2.getId())));;
 
         if (LocalTime.now().isBefore(repository.TIME_LIMIT.toLocalTime())){
             result.andExpect(status().isOk());

@@ -21,7 +21,11 @@ import ru.javawebinar.votesystem.web.ExceptionInfoHandler;
 
 import javax.annotation.PostConstruct;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -81,7 +85,8 @@ public class DayMenuAdminControllerTest extends AbstractControllerTest {
         perform(doDelete(MENU_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(MENU_ID, MENU_ID));
+        assertTrue(repository.get(MENU_ID).isEmpty());
+       // assertThrows(NotFoundException.class, () -> repository.get(MENU_ID));
     }
 
     @Test
@@ -104,7 +109,8 @@ public class DayMenuAdminControllerTest extends AbstractControllerTest {
         DayMenu updated = DayMenuTestData.getUpdated();
         perform(doPut(RESTO_ID).jsonBody(updated))
                 .andExpect(status().isNoContent());
-        DayMenu_MATCHERS.assertMatch(repository.get(MENU_ID, 1), updated);
+        assertEquals(repository.get(MENU_ID), Optional.of(updated));
+        //DayMenu_MATCHERS.assertMatch(repository.get(MENU_ID).orElse(null), updated);
     }
 
     @Test
@@ -118,7 +124,7 @@ public class DayMenuAdminControllerTest extends AbstractControllerTest {
         Integer newId = created.getId();
         newMenu.setId(newId);
         newMenu.setResto(RESTO_2);
-        DayMenu_MATCHERS.assertMatch(repository.get(newId, newId), newMenu);
+        assertEquals(repository.get(newId), Optional.of(newMenu));
     }
 
     @Test

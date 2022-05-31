@@ -12,11 +12,13 @@ import ru.javawebinar.votesystem.model.Resto;
 import ru.javawebinar.votesystem.repository.RestoRepository;
 import ru.javawebinar.votesystem.to.RestoTo;
 import ru.javawebinar.votesystem.util.Util;
+import ru.javawebinar.votesystem.util.exception.NotFoundException;
 import ru.javawebinar.votesystem.web.AbstractController;
 import ru.javawebinar.votesystem.web.AuthorizedUser;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.assureIdConsistent;
 
@@ -42,7 +44,8 @@ public class RestoAdminController extends AbstractController<Resto> {
 
     @GetMapping("/{id}")
     public RestoTo get(@PathVariable int id) {
-        return Util.createTo(super.getById(id, id));
+        return Util.createTo(restoRepository.get(id)
+                .orElseThrow(() -> new NotFoundException( String.format("resto with id %d is not found", id))));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -61,14 +64,15 @@ public class RestoAdminController extends AbstractController<Resto> {
     public void update(@RequestBody RestoTo restoTo, @PathVariable int id) {
         log.info("update {} with id={}", restoTo, id);
         assureIdConsistent(restoTo, id);
-        Resto resto = restoRepository.get(restoTo.id(), id);
-        restoRepository.save(Util.updateFromToResto(resto, restoTo), id);
+        restoRepository.get(restoTo.id())
+                .ifPresent(resto -> restoRepository.save(Util.updateFromToResto(resto, restoTo), id));
 
     }
 
     @GetMapping("/{id}/history")
     public Resto getWithHistory(@PathVariable int id) {
         log.info("getwithHistory {}", id);
-        return restoRepository.getWithHistory(id);
+        return restoRepository.getWithHistory(id)
+                .orElseThrow(() -> new NotFoundException(String.format("resto with is %d is not found", id)));
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 import ru.javawebinar.votesystem.model.Resto;
 
 import java.util.List;
+import java.util.Optional;
 
 import static ru.javawebinar.votesystem.util.ValidationUtil.checkNotFoundWithId;
 
@@ -29,16 +30,16 @@ public class RestoRepository implements ru.javawebinar.votesystem.repository.Rep
         checkNotFoundWithId(crudRepository.delete(id) != 0, id);
     }
 
-    public Resto get(int id, int userId) {
-        return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
+    public Optional<Resto> get(int id) {
+        return crudRepository.findById(id);
     }
 
     public List<Resto> getAllEntries(int userId) {
         return crudRepository.findAll(SORT_NAME_ADDRESS);
     }
 
-    public Resto getWithHistory(int id) {
-        return checkNotFoundWithId(crudRepository.getWitHistory(id), id);
+    public Optional<Resto> getWithHistory(int id) {
+        return crudRepository.getWitHistory(id);
     }
 
 }

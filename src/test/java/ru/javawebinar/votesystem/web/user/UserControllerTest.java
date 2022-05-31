@@ -12,8 +12,10 @@ import ru.javawebinar.votesystem.to.UserTo;
 import ru.javawebinar.votesystem.util.UserUtil;
 import ru.javawebinar.votesystem.web.AbstractControllerTest;
 
+import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,7 +66,8 @@ class UserControllerTest extends AbstractControllerTest {
         Integer newId = created.getId();
         newUser.setId(newId);
         USER_MATCHERS.assertMatch(created, newUser);
-        USER_MATCHERS.assertMatch(userRepository.get(newId, newId), newUser);
+        assertEquals(userRepository.get(newId), Optional.of(newUser));
+        //USER_MATCHERS.assertMatch(, newUser);
     }
 
     @Test
@@ -74,7 +77,7 @@ class UserControllerTest extends AbstractControllerTest {
         perform(doPut().jsonBody(updatedTo))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
-        USER_MATCHERS.assertMatch(userRepository.get(USER_ID, USER_ID), UserUtil.updateFromTo(new User(USER), updatedTo));
+        assertEquals(userRepository.get(USER_ID), Optional.of(UserUtil.updateFromTo(new User(USER), updatedTo)));
+        //USER_MATCHERS.assertMatch(, );
     }
 }

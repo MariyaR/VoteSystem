@@ -36,12 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userRepository = userRepository;
     }
 
-
-    //@Autowired
-    //private void setMapper(ObjectMapper objectMapper) {
-    //    JsonUtil.setMapper(objectMapper);
-    //}
-
     @Bean
     @Override
     // https://stackoverflow.com/a/70176629/548473
@@ -65,10 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole(Role.ADMIN.name())
-               // .antMatchers("/v2/api-docs/**").anonymous()
+                .antMatchers("/v2/api-docs/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/profile/register").anonymous()
-                //.antMatchers("/**").permitAll()
-                //.antMatchers(HttpMethod.POST, "/profile").anonymous()
                 .antMatchers("/**").authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
